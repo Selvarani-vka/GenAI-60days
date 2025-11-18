@@ -1,5 +1,5 @@
 Reverse prompting: you are an expert in writing json prompt:
-write a json prompt for generating the image "olorful background of forest,
+write a json prompt for generating the image "colorful background of forest,
 very nice sunlight in between the trees, paths are full of colorful flowers
 and plants and there is a stream with sparkling water and rocks.
 And there is a baby unicorn is flying and looking the sceneries" in a creative way

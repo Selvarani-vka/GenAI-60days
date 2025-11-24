@@ -1,0 +1,29 @@
+{
+  "title": "Social Eagle - AI Upskilling Journey",
+  "total_duration": "25s",
+  "language": "Tamil (Kongu Accent)",
+  "tone": "Comical, Fast-paced, Emotional uplift",
+  "scenes": [
+    {
+      "scene_id": 1,
+      "duration": "8s",
+      "visual_prompt": "Late evening IT office, dim lights, small desk lamp glowing. A mid-level Indian lady IT professional around 30, tired face, messy hair bun, multiple monitors showing error messages and security restriction popups. She rubs her eyes, coffee mugs around, office empty except her. Manager standing behind with a frustrated expression, pointing at the screen. She tries ChatGPT on her personal laptop but results look irrelevant and confusing.",
+      "audio_prompt": "Background: comical tension music. Lady (Kongu Tamil): 'இந்த மேனேஜர் எனக்கு ஒரு நாள் வேலை, அப்படின்னு தான் கொடுத்தாரு.... ஒரு மாசம் ஆச்சு... ஆனாலும் என்னால முடிக்க முடியலையே...  chatgpt தான் கடவுள்னு பார்த்து  அது கிட்ட answer கேட்டா chatgptயும் எனக்கு correctஆன answer கொடுத்து ஹெல்ப் பண்ண மாட்டேங்குதே....!'                   Manager (sarcastic tone): 'இந்த AI உலகத்துல எல்லாரும் ஒரு மாச வேலையை ஒரு நாள்ல முடிக்கிறாங்க... உன்னால ஒரு நாள் வேலையை ஒரு மாசம் ஆனா கூட முடிக்க முடியல.... நீ இதுக்கு சரிப்பட்டு வர மாட்ட.... உன்ன தூக்கிற வேண்டியது தான்....!'",
+      "transition": "Fast comical zoom-in on her stressed face."
+    },
+    {
+      "scene_id": 2,
+      "duration": "10s",
+      "visual_prompt": "One-month timeline montage: days flipping like calendar pages. The lady trying AI tools randomly, getting errors, escalation emails popping on screen, boss shouting on video call, she holding her head in frustration. Suddenly, a notification pops up on her phone: 'Social Eagle AI Community – Learn AI Smartly.' Scene brightens instantly. A friendly online community interface appears with smiling members and helpful posts.",
+      "audio_prompt": "Lady (excited): 'Ennaaa idhu… Social Eagle community aa? Ellaarum help pannuvaanga? Techniques um kuduppaangala?' Narrator (comical heroic tone): 'Aam pa! Ithu than unga kaapathara team!'",
+      "transition": "Swipe transition into learning montage."
+    },
+    {
+      "scene_id": 3,
+      "duration": "7s",
+      "visual_prompt": "Bright, colorful shots: Lady attending Social Eagle AI course, taking notes happily, using prompts effectively, transforming office tasks instantly. Manager now shocked and impressed. She receives appreciation email. Community meetup scene: everyone standing together, cheerful, colourful background, friendly vibe.",
+      "audio_prompt": "Lady (proud): 'Ippo naan AI la pro-u da! Task ellam semma speed-u!' Community members together (closing line): 'நாங்கள் இருக்கிறோம் உங்களுடைய future protect பண்றதுக்கு!'",
+      "transition": "Fade out with logo: Social Eagle Community"
+    }
+  ]
+}

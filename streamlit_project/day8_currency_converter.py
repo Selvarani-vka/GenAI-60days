@@ -63,3 +63,4 @@ with col2:
                     on_change=lambda: number_input_callback("GBP"))
 
 st.markdown("</div>", unsafe_allow_html=True)
+

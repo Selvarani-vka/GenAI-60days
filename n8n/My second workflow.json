@@ -1,0 +1,243 @@
+{
+  "name": "My second workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -816,
+        -128
+      ],
+      "id": "23925567-4949-47e3-ab5e-158c483e7195",
+      "name": "Trigger manually"
+    },
+    {
+      "parameters": {
+        "jsCode": "// The JSON you receive is like:\n// [ { \"users\": [ {...}, {...}, ... ] } ]\n\n// 1. Read the first item\nconst input = items[0].json;\n\n// 2. Use a dynamic key instead of hardcoding \"users\"\nconst dynamicKey = Object.keys(input)[0];   // <-- finds \"users\" automatically\nconst records = input[dynamicKey];\n\n// 3. Convert each record into a separate n8n item\nconst output = [];\n\nfor (const record of records) {\n  output.push({\n    json: record\n  });\n}\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        -160
+      ],
+      "id": "5e7f9382-ad31-4698-a388-592e8ce4c492",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0892c55d-e553-430b-92e6-36aa4c8f97d4",
+              "name": "users",
+              "value": "[ { \"Name\" : \"AAA\", \"Age\" : 25 , \"City\" : \"Erode\" }, { \"Name\" : \"BBB\", \"Age\" : 45 , \"City\": \"Salem\" }, { \"Name\" : \"CCC\", \"Age\" : 20 , \"City\" : \"Karur\" } ,  { \"Name\" : \"DDD\", \"Age\" : 40 , \"City\" : \"Namakkal\" }\n]",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -656,
+        -160
+      ],
+      "id": "cbebfcb1-ae5e-400b-b0ac-a0e2410d0b9b",
+      "name": "Array Input "
+    },
+    {
+      "parameters": {
+        "batchSize": 4,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -192,
+        -144
+      ],
+      "id": "465b18e7-4ac6-4ff7-a524-fc1825795660",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c5c36ff8-f412-4f4d-a9bc-e12bf658479a",
+              "leftValue": "={{ $json.Age }}",
+              "rightValue": 30,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        16,
+        -48
+      ],
+      "id": "e983582e-370e-4898-9745-8b5a535bbf0e",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6ad0d05a-52fd-42af-92fd-cf8bde6f3ff7",
+              "name": "message",
+              "value": "They are young",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        48
+      ],
+      "id": "753a2b41-5165-42b9-97ab-b68baadf51a7",
+      "name": "Young"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a5fc1458-80e5-4bcc-8148-5b3412cdb208",
+              "name": "message",
+              "value": "They are old",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        -144
+      ],
+      "id": "d6d8ded2-f084-4a02-b237-dea1e40b67eb",
+      "name": "Old"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Trigger manually": {
+      "main": [
+        [
+          {
+            "node": "Array Input ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Array Input ": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Old",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Young",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Young": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Old": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "85a4e2bf-f0ea-4fb8-a5fd-aa86d0b5b320",
+  "meta": {
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "9QAivdAUoVvcG94v",
+  "tags": []
+}

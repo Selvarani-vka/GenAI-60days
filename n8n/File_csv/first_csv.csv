@@ -1,0 +1,4 @@
+﻿id,name,email,city,age
+CUST001,John Doe,john.doe@example.com,New York,32
+CUST002,Sarah Miller,sarah.miller@example.com,Chicago,28
+CUST003,Arun Kumar,arun.kumar@example.com,Bangalore,40

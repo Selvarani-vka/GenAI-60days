@@ -1,0 +1,107 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -528,
+        -64
+      ],
+      "id": "d4e74589-95c5-4e20-969e-6aba54832db0",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "\n  {\n    \"customers\": [\n      {\n        \"id\": \"CUST001\",\n        \"name\": \"John Doe\",\n        \"email\": \"john.doe@example.com\",\n        \"city\": \"New York\",\n        \"age\": 32\n      },\n      {\n        \"id\": \"CUST002\",\n        \"name\": \"Sarah Miller\",\n        \"email\": \"sarah.miller@example.com\",\n        \"city\": \"Chicago\",\n        \"age\": 28\n      },\n      {\n        \"id\": \"CUST003\",\n        \"name\": \"Arun Kumar\",\n        \"email\": \"arun.kumar@example.com\",\n        \"city\": \"Bangalore\",\n        \"age\": 40\n      }\n    ]\n  }\n\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -320,
+        -64
+      ],
+      "id": "6ab3ec56-b040-41b9-83ca-e2e33610a891",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "options": {
+          "fileName": "first_json"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        -64
+      ],
+      "id": "bdacf1d8-3457-42cb-b0cb-25f19bf25b99",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "fromJson",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        96,
+        -64
+      ],
+      "id": "030183da-4750-4b84-b661-8e0fe8b82552",
+      "name": "Extract from File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "432a7a07-5077-4c79-8a9f-58ee9d822fb5",
+  "meta": {
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "h2usVU4LpTFi8qE0",
+  "tags": []
+}

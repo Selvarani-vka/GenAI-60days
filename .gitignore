@@ -1,6 +1,7 @@
 myenv/
 aenv/
 vagent/
+.venv/
 __pycache__/
 *.mp3
 *.wav

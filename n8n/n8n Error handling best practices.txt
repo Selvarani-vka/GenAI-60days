@@ -1,0 +1,12 @@
+Error Handling Best Practices
+Executive Summary
+Quick Error Handling Guide:
+
+Pin Data - Save node results so you don't have to run it again
+Always Output Data - Turn this on so empty results don't stop your workflow
+Retry on Fail - Use for regular nodes (HTTP, database), NOT for AI nodes
+Debug with Code Node - Add console logs to see what's happening in specific nodes
+Development Mode - Use "Stop Workflow" on error to find problems quickly
+Production Mode - Use "Continue Using Error Output" so workflow keeps running
+Error Trigger - Get notified by email, Slack, or Telegram when something breaks
+When Error Happens - Take 3 screenshots (failed node, previous node, full workflow) and ask AI (ChatGPT/Claude) for help

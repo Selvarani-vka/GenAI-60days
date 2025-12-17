@@ -1,1 +1,7 @@
 myenv/
+aenv/
+vagent/
+__pycache__/
+*.mp3
+*.wav
+.env

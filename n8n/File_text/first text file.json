@@ -1,0 +1,130 @@
+{
+  "name": "first text file",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1136,
+        -48
+      ],
+      "id": "4928ca7f-76dc-406d-8fae-0ba88aca42c6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"customers\": [\n    {\n      \"id\": \"CUST001\",\n      \"name\": \"John Doe\",\n      \"email\": \"john.doe@example.com\",\n      \"city\": \"New York\",\n      \"age\": 32\n    }\n  ]\n    }\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -944,
+        -48
+      ],
+      "id": "96bc46ff-003c-4476-888b-c700c6607a9b",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "line",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -560,
+        -48
+      ],
+      "id": "e362a380-06ce-4079-b318-14aab6d89fbc",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// The JSON you receive is like:\n// [ { \"users\": [ {...}, {...}, ... ] } ]\n\n// 1. Read the first item\nconst input = items[0].json;\n\n// 2. Use a dynamic key instead of hardcoding \"users\"\nconst dynamicKey = Object.keys(input)[0];   // <-- finds \"users\" automatically\nconst records = input[dynamicKey];\n\n// 3. Convert each record into a separate n8n item\nconst output = [];\n\nfor (const record of records) {\n\n  // Create a formatted line for text file\n  const line = `${record.id}, ${record.name}, ${record.email}, ${record.city}, ${record.age}`;\n\n  output.push({\n    json: {\n      line   // <-- added here\n    }\n  });\n}\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        -48
+      ],
+      "id": "cc23a4e2-9b71-48c9-8fd8-02a736ada663",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -352,
+        -48
+      ],
+      "id": "27ad5af3-5cf9-4935-8a02-b754e04ae645",
+      "name": "Extract from File"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b2909c61-a9ea-457b-b3b0-4df9cee1a8c3",
+  "meta": {
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "jFaBcY4pD9HHSqvG",
+  "tags": []
+}

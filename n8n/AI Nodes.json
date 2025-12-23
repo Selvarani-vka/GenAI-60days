@@ -1,0 +1,700 @@
+{
+  "name": "AI Nodes",
+  "nodes": [
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an intelligent motivational message generator. Generate one line message to feel energetic\n\ncall the Gmail tool and send this quotes as a body of the content.\n\nTo: 'aaafocusnova@gmail.com'"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.6
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -2592,
+        -1008
+      ],
+      "id": "24ddb6b5-dca5-46c2-86ec-344a8e575d0e",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "Daily Motivational Quote",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -2512,
+        -800
+      ],
+      "id": "645a8c33-b7be-491f-905b-effd88fe4245",
+      "name": "Send a message in Gmail",
+      "webhookId": "96485c86-bdf9-4b7b-b6d4-9213ab9bdf59",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k7h4FtDjuWbT7P1m",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=you are an expert for answering the questions. Explain the text {{ $json.output[0].content[0].text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainRetrievalQa",
+      "typeVersion": 1.6,
+      "position": [
+        -2240,
+        -1008
+      ],
+      "id": "186bdfbf-5c60-4e69-9eb0-089fbc01d8c6",
+      "name": "Question and Answer Chain"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.retrieverVectorStore",
+      "typeVersion": 1,
+      "position": [
+        -2112,
+        -800
+      ],
+      "id": "cdd61ffb-261c-4cae-bf0c-a49d8d71878a",
+      "name": "Vector Store Retriever"
+    },
+    {
+      "parameters": {
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [
+        -2048,
+        -656
+      ],
+      "id": "8e1778e0-c8ef-4969-b0e4-62e7cbf92d68",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1968,
+        -448
+      ],
+      "id": "4fad343d-7548-4db7-9e35-4c4e1fb2ec98",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -2288,
+        -800
+      ],
+      "id": "2e4a129c-fcc7-483f-9900-2989f6f5cbda",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=you are an expert in explaining the quotes in simple english. {{ $json.output[0].content[0].text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are an expert assistant explain the quotes in simple english"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -1168,
+        -992
+      ],
+      "id": "c983fe38-e5f4-4b89-816f-a0c715eab8f8",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.Subject }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "subject",
+              "description": "give me the list of subject"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        -992
+      ],
+      "id": "8f9d8a99-5be6-45ee-a17a-95eba3bd57a5",
+      "name": "Information Extractor"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -672,
+        -784
+      ],
+      "id": "ee14aca1-75a3-4ad0-9f12-a1a628064b2b",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 10,
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -816,
+        -992
+      ],
+      "id": "aa7aa340-9cd0-4c48-b3a6-42c10085e35b",
+      "name": "Get many messages",
+      "webhookId": "5f47ba3a-4180-4aa2-9c50-3e76fbe83144",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k7h4FtDjuWbT7P1m",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are an intelligent motivational message generator. Generate one line message to feel energetic\n\n"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.6
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -1520,
+        -992
+      ],
+      "id": "849900b3-32fc-44ca-ac51-821a681d5c8b",
+      "name": "Message a model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "Daily Motivational Quote",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -1440,
+        -784
+      ],
+      "id": "6e25a1fd-816b-4373-a14e-940bd361a159",
+      "name": "Send a message in Gmail1",
+      "webhookId": "96485c86-bdf9-4b7b-b6d4-9213ab9bdf59",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k7h4FtDjuWbT7P1m",
+          "name": "aaafocus"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1232,
+        -784
+      ],
+      "id": "bf4b85f5-3765-4192-b068-b4ff9fcc00c3",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Review submission",
+        "formDescription": "Getting the feedback from customers",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Describe us ",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -2560,
+        -1504
+      ],
+      "id": "5c25270e-53b6-443a-b7ab-687cd3b5a924",
+      "name": "On form submission",
+      "webhookId": "4e7658c9-2da3-4cba-b5ad-c920c6cf3272"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json['Describe us '] }}",
+        "options": {
+          "categories": "Positive, Neutral, Negative"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1.1,
+      "position": [
+        -2352,
+        -1504
+      ],
+      "id": "2c41f9b8-079c-4fa3-b687-b39897708092",
+      "name": "Sentiment Analysis"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2.1,
+      "position": [
+        -2000,
+        -1504
+      ],
+      "id": "13a85ef4-8f5a-4504-ae56-b59b4b6b6a25",
+      "name": "Summarization Chain"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.output.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Neutral",
+              "description": "The reviews are neutral"
+            },
+            {
+              "category": "Positive",
+              "description": "The reviews are good"
+            },
+            {
+              "category": "Take action",
+              "description": "The reviews are bad"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -1648,
+        -1504
+      ],
+      "id": "5d453294-da07-4896-8d4a-e6849445776e",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -2432,
+        -1296
+      ],
+      "id": "870784d4-e929-406d-bb84-c07428a54801",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -2064,
+        -1296
+      ],
+      "id": "75a6f0dd-e869-42d7-9c7c-f46d0b947e8e",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "responsesApiEnabled": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1712,
+        -1296
+      ],
+      "id": "9c730f2a-1051-45a6-93e6-322c51c4cc67",
+      "name": "OpenAI Chat Model5",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Retriever": {
+      "ai_retriever": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_retriever",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Retriever",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Question and Answer Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Get many messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail1": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarization Chain": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Summarization Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6b814bbc-0593-4151-bc35-1101c9529257",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "onT6lVoVxf4XhNGk",
+  "tags": []
+}

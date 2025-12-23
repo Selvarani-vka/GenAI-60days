@@ -1,0 +1,225 @@
+{
+  "name": "google basic automation",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -912,
+        -32
+      ],
+      "id": "fa9d4020-b58c-4048-92dc-a3450f56bcec",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "sendTo": "aaafocusnova@gmail.com",
+        "subject": "n8n workflow- gmail automation demo",
+        "emailType": "text",
+        "message": "Hi! This is gmail send message automation demo!",
+        "options": {
+          "appendAttribution": false,
+          "ccList": ""
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -704,
+        -32
+      ],
+      "id": "5c675927-61d6-433c-b5f4-f63defd600c0",
+      "name": "Send a message",
+      "webhookId": "cfdf0904-25d4-45c0-9c20-cab3cb1085f0",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k7h4FtDjuWbT7P1m",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "AI-Demo",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -496,
+        -32
+      ],
+      "id": "eca968f9-2838-421c-9ad2-df79595a14c0",
+      "name": "Create folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "IuBRj7WShUcpUiQM",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "folderId": "1aE8WoAp7JmquEMjV_uzTdNMtUAV6LKUW",
+        "title": "socialeagledemo"
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        -288,
+        -32
+      ],
+      "id": "f9f45b6e-06ec-43f7-be41-c4eb22d0d618",
+      "name": "Create a document",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "JPuuBbTjfkm0Sahi",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "documentId": {
+          "__rl": true,
+          "value": "1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM",
+          "mode": "list",
+          "cachedResultName": "AI-demosheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM/edit?usp=drivesdk"
+        },
+        "title": "={{ new Date().toLocaleDateString(\"en-GB\", { timeZone: \"Asia/Kolkata\" }).replace(/\\//g, \"-\") }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        -32
+      ],
+      "id": "cb4a98ec-29a2-4055-92c8-51d66277c599",
+      "name": "Create sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zEL9yqRRaew9wl3F",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "aaafocusnova@gmail.com",
+          "mode": "list",
+          "cachedResultName": "aaafocusnova@gmail.com"
+        },
+        "additionalFields": {
+          "attendees": [
+            "selvarani.vka@gmail.com"
+          ],
+          "description": "AI automation meeting"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        128,
+        -32
+      ],
+      "id": "6805347d-7d5e-4e81-acbc-2ebcfe14063a",
+      "name": "Create an event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "RpQJ3u912uWuWf6E",
+          "name": "aaafocus"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Create folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create folder": {
+      "main": [
+        [
+          {
+            "node": "Create a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a document": {
+      "main": [
+        [
+          {
+            "node": "Create sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create sheet": {
+      "main": [
+        [
+          {
+            "node": "Create an event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "a8ad60fe-4209-4d21-b067-3e432ba44125",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "8JXj96XYRiyABTdA",
+  "tags": []
+}

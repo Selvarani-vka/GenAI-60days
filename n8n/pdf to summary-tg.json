@@ -1,0 +1,152 @@
+{
+  "name": "pdf to summary-tg",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {
+          "download": true
+        }
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -608,
+        -16
+      ],
+      "id": "7d2d6757-1af6-4b9e-981b-9d8224389bd0",
+      "name": "Telegram Trigger",
+      "webhookId": "3ad4f53b-8426-4c18-b220-211181f78cb4",
+      "credentials": {
+        "telegramApi": {
+          "id": "FFbLiFW9MVf8Cv73",
+          "name": "aaa_focus_ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        -16
+      ],
+      "id": "d70dcb45-3ad2-464c-8b3a-b9a4af8e9705",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=summarize the given pdf  {{ $json.text }}"
+            },
+            {
+              "role": "system",
+              "content": "You are an expert pdf summarizer. The content should be cover all the import and highlighted topics and easy to understand all the concepts. Summarize in one page that should be formatted well and easy to read."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        -16
+      ],
+      "id": "c26f2a44-7d05-4b0a-b6a7-61fce584bf9e",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output[0].content[0].text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        -16
+      ],
+      "id": "20fd6958-9bcc-49ac-aba2-1509a5754310",
+      "name": "Send a text message",
+      "webhookId": "a9ee027d-3f43-47b5-bd60-05f4a55d4564",
+      "credentials": {
+        "telegramApi": {
+          "id": "FFbLiFW9MVf8Cv73",
+          "name": "aaa_focus_ai"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "02e01da7-6d43-403a-b6b1-8f9a82a49275",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "nlqoIoSEmTjUsRgi",
+  "tags": []
+}

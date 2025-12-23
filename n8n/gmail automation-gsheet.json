@@ -1,0 +1,345 @@
+{
+  "name": "gmail automation-gsheet",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Feedback",
+        "formDescription": "Review from the customers",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Review",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -688,
+        -192
+      ],
+      "id": "41d2a53d-11ec-451e-a615-b1f5391f026c",
+      "name": "On form submission",
+      "webhookId": "b0763787-4be7-4e0b-8e16-90949f3746d7",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM",
+          "mode": "list",
+          "cachedResultName": "AI-demosheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1015163286,
+          "mode": "list",
+          "cachedResultName": "Feedback",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM/edit#gid=1015163286"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Review": "={{ $json.Review }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Review",
+              "displayName": "Review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -480,
+        -192
+      ],
+      "id": "5ad0b2f7-9107-4462-828f-017d2f86e349",
+      "name": "Append or update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zEL9yqRRaew9wl3F",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        80
+      ],
+      "id": "28782d6f-137f-4f7b-8c5a-be048d0dbc29",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM",
+          "mode": "list",
+          "cachedResultName": "AI-demosheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1015163286,
+          "mode": "list",
+          "cachedResultName": "Feedback",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM/edit#gid=1015163286"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -464,
+        80
+      ],
+      "id": "4988de9c-f6b3-4ba4-a910-0b7ff48936ba",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zEL9yqRRaew9wl3F",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Write a mail to the list.\nTo:\n {{ $json.Email }}"
+            },
+            {
+              "role": "system",
+              "content": "You are an AI assistant that generates semi-formal, polite, and well-formatted reply emails.\nWhen the user provides the original message or instructions, produce a reply email following this exact structure:\n\nSubject: We’re Glad You Shared Your Experience\nGreeting:\nStart with “Hi [Sender Name],”.\nIf the sender name is not provided, use “Hi,”.\n\nBody:\n• Express sincere appreciation for the customer’s feedback.\n• Acknowledge the specific feedback points in a positive and constructive way.\n• Offer assistance, solutions, or reassurance where applicable.\n• Maintain a friendly, engaging, and positive tone throughout.\n• End with a courteous closing and a professional signature placeholder.\n• Keep the reply concise yet meaningful, avoiding generic or robotic phrases.\n• Do NOT invent details beyond the given feedback, but make the response feel personalized and attractive.\nMaintain a friendly and helpful tone.\n\nClosing & Footer:\nEnd with:\n\nBest regards,\n\n        🌿\n   O R G A N I C\n      B L O O M\n    🌸      🌱\n\n\n\nAdditional rules:\n\nDo not add unnecessary details not mentioned by the user.\n\nKeep the email short, warm, and professional.\n\nPreserve clean spacing and proper paragraph breaks.\n\nYour output should always follow this format exactly."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        16,
+        112
+      ],
+      "id": "0f157f75-bf2c-4db3-944c-0daab1e0e75e",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        160,
+        336
+      ],
+      "id": "bb197379-44b4-49b7-ad64-5cebcea65dc5",
+      "name": "Send a message in Gmail",
+      "webhookId": "99458e85-cdea-42c0-ab86-7ff22cb94c05",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k7h4FtDjuWbT7P1m",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        112
+      ],
+      "id": "6ce3f4c9-6b95-4637-bc82-02483c62c1ab",
+      "name": "Wait",
+      "webhookId": "fdc69659-85f2-4f99-9e7d-cc527cba3f24"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -256,
+        80
+      ],
+      "id": "2f11da53-27c7-463d-8aa0-a4bcb11663b2",
+      "name": "Loop Over Items"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Append or update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "55e6d3b7-f753-4b77-88dc-72ce0bd1c51d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "3ZkUJ4frjDgXr5aH",
+  "tags": []
+}

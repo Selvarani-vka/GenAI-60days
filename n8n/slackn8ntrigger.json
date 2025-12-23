@@ -1,0 +1,119 @@
+{
+  "name": "slackn8ntrigger",
+  "nodes": [
+    {
+      "parameters": {
+        "trigger": [
+          "message"
+        ],
+        "channelId": {
+          "__rl": true,
+          "value": "C0A1XBE00QN",
+          "mode": "list",
+          "cachedResultName": "new-channel"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slackTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        -240
+      ],
+      "id": "ea950f1e-095b-4a34-98a5-04fedf36516f",
+      "name": "Slack Trigger",
+      "webhookId": "40238c96-a498-4e00-b7ed-23f92bc8c4d0",
+      "credentials": {
+        "slackApi": {
+          "id": "uzAFEPAT0sNNFfYC",
+          "name": "newdops"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "=Create an image for the given text \n{{ $json.blocks[0].elements[0].elements[0].text }}",
+        "options": {
+          "dalleQuality": "standard",
+          "size": "1024x1024"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -848,
+        -240
+      ],
+      "id": "d6ba5480-e06c-4708-b577-072bf3ccc34e",
+      "name": "Generate an image",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "options": {
+          "channelId": "={{ $('Slack Trigger').item.json.channel }}",
+          "fileName": "={{ $json.fileName }}"
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        -640,
+        -240
+      ],
+      "id": "fdf8af25-0340-4050-8d3c-2cc4596fbc17",
+      "name": "Upload a file",
+      "webhookId": "810f43f6-5609-43d6-9fb4-ba7554f6306b",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "HL4Bh0QeDX9Opv6g",
+          "name": "dopsai"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Slack Trigger": {
+      "main": [
+        [
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate an image": {
+      "main": [
+        [
+          {
+            "node": "Upload a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f12af144-6d88-403d-b394-13718f1835f1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "LVdwlVoGupxcMizB",
+  "tags": []
+}

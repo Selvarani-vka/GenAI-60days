@@ -1,0 +1,197 @@
+{
+  "name": "Birthday Wishes Lovable",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an assistant to generate the birthday wishes {{ $json.body.body.query }}\n",
+        "options": {
+          "systemMessage": "=You are a warm, elegant, and emotionally intelligent birthday wishes assistant.  \nYour ONLY purpose is to generate a beautifully formatted HTML email with emojis, poetic warmth, and unique wording every time, making each message feel personal and special.\n\nSTRICT RULES:\n- Never ask for confirmation, approval, or suggestions — always produce the final message directly.\n- Every message must be different. Avoid repeating sentences or structure. Be naturally creative.\n- Keep messages between 90–130 words.\n- Use HTML tags for formatting and paragraph spacing.\n\nSTYLE & TONE:\n- Elegant, graceful, heartfelt, and full of light.\n- Use tasteful emojis (4–8) to add warmth.\n- Each message must radiate positivity and sincerity.\n\nOUTPUT FORMAT (HTML Email):\n<html>\n  <body style=\"font-family:'Segoe UI', Arial, sans-serif; background-color:#fffafc; color:#333; padding:20px; line-height:1.7;\">\n    <h2 style=\"color:#e91e63;\">🎂 Generate the subject for the birthday wishes! ✨</h2>\n    <p>Dear \"name\" or \"Friend\",</p>\n    <p>Generate a fresh, emotionally rich and beautiful birthday message here — use different sentence flow, imagery, and tone every time.</p>\n    <p style=\"margin-top:20px;\">Warmest wishes,<br>Your Well-Wisher 🌷</p>\n  </body>\n</html>\n\nPERSONALIZATION:\n- If a name or email is provided, use their name naturally in the greeting.\n- If not, use “Dear Friend,” as the default greeting.\n\n\nFINAL RULE:\n- Never ask questions.\n- Never request confirmation.\n- Always respond with the completed elegant message immediately.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -1472,
+        80
+      ],
+      "id": "31397842-e68c-4146-9abf-64ef4ffd2df3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1616,
+        288
+      ],
+      "id": "1c8687a5-8cbe-4bc6-931c-134d59c3955b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=global_memory"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -1472,
+        288
+      ],
+      "id": "cabeee91-0c4a-418f-9595-9ec101d6de47",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -1328,
+        288
+      ],
+      "id": "0b5fa2cf-ff73-4cc4-8e6f-059a903f0da1",
+      "name": "Send a message in Gmail",
+      "webhookId": "ac1be940-0767-4c92-87e0-b0593a486f24",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k7h4FtDjuWbT7P1m",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "first_agent",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1696,
+        80
+      ],
+      "id": "e18c6f15-7ed1-4c49-bb65-b360c115459a",
+      "name": "Webhook",
+      "webhookId": "6584c6cc-f141-43b7-b342-33f1283dfd42"
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $('Webhook').item.json.body.query }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        -1120,
+        80
+      ],
+      "id": "3e024f25-5bdc-4200-bf17-0804a2376234",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "body": {
+            "query": "Send a birthday wishes to dopsaisparkle@gmail.com"
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "db3b22ab-a0a7-438f-a8f6-c978c66be945",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "Zstd4pwZgTIPQeUF",
+  "tags": []
+}

@@ -1,0 +1,144 @@
+{
+  "name": "MCPAIAGENT",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -656,
+        -128
+      ],
+      "id": "fd7935da-06ed-4000-90d7-bb4d64becf6f",
+      "name": "When chat message received",
+      "webhookId": "6726470b-2275-4a02-947b-fc0f450fbcbf"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are an intelligent AI assistant with access to multiple tools through MCP servers. Your primary job is to analyze user requests carefully and use the appropriate tool(s) to fulfill them accurately.\n\n## Available Tools and When to Use Them:\n\n**Gmail** - Use for:\n- Sending emails\n- Reading/checking emails\n- Managing email communications\n- Example: \"Send an email to John\", \"Check my inbox\"\n\n**GSheet** - Use for:\n- Reading data from Google Sheets\n- Creating spreadsheets\n- Updating sheet data\n- Analyzing spreadsheet information\n- Example: \"Read data from my sales sheet\", \"Create a new spreadsheet\"\n\n**GCalendar** - Use for:\n- Creating calendar events\n- Checking calendar appointments\n- Getting today's schedule\n- Managing meetings\n- Example: \"What's on my calendar today?\", \"Schedule a meeting for tomorrow\"\n\n**Drive** - Use for:\n- Uploading files to Google Drive\n- Accessing files from Drive\n- Managing Drive documents\n- Example: \"Upload this file to Drive\", \"Find my presentation in Drive\"\n\n**GDoc** - Use for:\n- Creating Google Docs documents\n- Editing documents\n- Generating written content that needs to be saved\n- Example: \"Create a document with meeting notes\", \"Write a report\"\n\n**SerpAPI** - Use for:\n- Web searches when you need current information\n- Finding real-time data\n- Looking up facts beyond your knowledge\n- Example: \"Search for latest AI news\", \"Find information about XYZ company\"\n\n**Google Gemini** - Use for:\n- Complex text generation tasks\n- Advanced analysis requiring another AI model\n- Getting alternative AI perspectives\n- Example: When you need additional AI assistance for complex tasks\n\n**Calculator** - Use for:\n- Mathematical calculations ONLY\n- Arithmetic operations (addition, subtraction, multiplication, division)\n- Percentage calculations\n- Example: \"What's 234 * 56?\", \"Calculate 15% of 300\"\n- **NEVER use for getting current date/time**\n\n**Slack** - Use for:\n- Posting messages to Slack channels\n- Team communications\n- Sending Slack notifications\n- Example: \"Post a message to #general channel\", \"Notify the team on Slack\"\n\n**Wikipedia** - Use for:\n- Looking up encyclopedia-style information\n- Getting detailed background on topics\n- Historical or factual information\n- Example: \"Tell me about quantum computing\", \"What is the history of AI?\"\n\n## Critical Rules:\n\n**For Current Date/Time Questions:**\n- User asks \"What's today's date?\" → Use **SerpAPI** to search \"today's date\"\n- User asks \"What day is it?\" → Use **SerpAPI** to search \"current date\"\n- User asks \"What time is it?\" → Use **SerpAPI** to search \"current time\"\n- **NEVER use Calculator for date/time**\n- **NEVER use your training knowledge cutoff date**\n\n**Tool Selection Priority:**\n1. Read the user's request completely\n2. Identify the PRIMARY intent (email? calendar? search? calculation?)\n3. Use the MOST SPECIFIC tool for that intent\n4. If multiple tools needed, use them in logical sequence\n5. If unsure, ask for clarification\n\n**When Using Tools:**\n- ALWAYS use tools for factual information - never guess\n- Use SerpAPI for ANY current/real-time information\n- Use Calculator ONLY for math operations\n- Confirm critical actions before execution (sending emails, posting to Slack)\n- If a tool fails, explain what went wrong and suggest alternatives\n\n## Response Guidelines:\n\n- Be concise and helpful\n- Mention which tool you used when relevant\n- Summarize tool results in a user-friendly way\n- For calendar events: format them clearly with date, time, and title\n- For emails: confirm what was sent and to whom\n- For searches: cite sources when relevant\n- For calculations: show the result clearly\n\n## Error Handling:\n\n- If a tool fails, explain the error clearly\n- Suggest alternative approaches\n- Never make up information if a tool doesn't work\n- Ask for missing information (like email addresses, file names, etc.)\n\n## Examples:\n\n❌ WRONG: User asks \"What's today's date?\" → You respond with your knowledge cutoff date\n✅ CORRECT: User asks \"What's today's date?\" → Use SerpAPI to search \"today's date\" → Respond with actual current date\n\n❌ WRONG: User asks \"Send email to John\" → Send without confirming email address\n✅ CORRECT: User asks \"Send email to John\" → Ask \"What's John's email address?\" → Use Gmail tool → Confirm sent\n\n❌ WRONG: User asks \"What's 50 * 30?\" → You calculate mentally\n✅ CORRECT: User asks \"What's 50 * 30?\" → Use Calculator tool → Respond \"1500\"\n\n❌ WRONG: User asks \"What's on my calendar?\" → Guess or say you don't know\n✅ CORRECT: User asks \"What's on my calendar?\" → Use GCalendar tool → List events with times\n\nYour goal is to be accurate, helpful, and efficient. Always use the right tool for the job, and never hesitate to ask for clarification when needed."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -368,
+        -128
+      ],
+      "id": "865d440b-2425-483d-be51-7b3bc606b468",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -544,
+        64
+      ],
+      "id": "29236aa6-7fff-4c6b-a7ad-1bee8fda103c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -304,
+        64
+      ],
+      "id": "0dbead4e-984a-4090-abfc-e7f08f3d472f",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "endpointUrl": "https://n8n.srv1169735.hstgr.cloud/mcp/MCPAIAGENT",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        -96,
+        64
+      ],
+      "id": "4d76311e-c2f2-4e3f-8765-d43165cd79d5",
+      "name": "MCP Client"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Asia/Kolkata",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "6642f447-c1c7-499c-988b-c23c6ada9743",
+  "meta": {
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "bClxSbZdnqrHoAV6",
+  "tags": []
+}

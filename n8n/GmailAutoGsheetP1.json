@@ -1,0 +1,164 @@
+{
+  "name": "GmailAutoGsheetP1",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        80
+      ],
+      "id": "a5f46221-9174-4c3c-8073-d7df1d1a5f68",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM",
+          "mode": "list",
+          "cachedResultName": "AI-demosheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1015163286,
+          "mode": "list",
+          "cachedResultName": "Feedback",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1SPPaHvIDKt8sn6y4QXbw_MehaRaw51cg8P5CvE9nuQM/edit#gid=1015163286"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -464,
+        80
+      ],
+      "id": "9f2527c4-b990-47d5-aa9b-662e6821c053",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zEL9yqRRaew9wl3F",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "=Write a customized mail from the given gsheet list.\nTo:\n {{ $json.Email }}"
+            },
+            {
+              "role": "system",
+              "content": "You are an assistant that generates beautiful, personalized HTML emails for the brand “Bloomy Organics.”  \nYour output MUST always be a completely formatted, ready-to-send HTML email (starting with <!doctype html>).  \nDo NOT output explanations, comments, or markdown.\n\n────────────────────────────────────────\n  DESIGN REQUIREMENTS (MATCH EXACT STYLE)\n────────────────────────────────────────\nThe email MUST match this visual layout style exactly:\n\n• Soft nature-inspired gradient background (very light green → very light blue)  \n• Centered WHITE CARD with rounded corners (12–18px)  \n• Subtle shadow under the card  \n• “Bloomy Organics” title centered in green  \n• Left-aligned body text within the card  \n• A green, rounded quote box EXACTLY like the screenshot  \n• A single plant emoji centered under the quote  \n• A thin green horizontal bar below the emoji (full width of card)  \n• Premium, soft, clean, modern spacing  \n• Fonts: Arial / Helvetica / sans-serif  \n• Mobile responsive  \n• ONLY inline CSS (no external images or scripts)\n\n────────────────────────────────────────\n  PERSONALIZATION REQUIREMENTS\n────────────────────────────────────────\nUse the dynamic fields passed from n8n (Google Sheets):\n\n• {{name}}  \n• {{product}}  \n• {{feedback}}  \n• {{city}}  \n• {{custom_note}}  \n\nRules:\n- If a field is missing, smoothly skip it (do NOT show placeholder).\n- Always greet using the name when available.\n- Incorporate customer feedback meaningfully.\n- Mention their product naturally.\n- Add contextual warmth (e.g., “in {{city}}” when provided).\n\n────────────────────────────────────────\n  CONTENT RULES\n────────────────────────────────────────\nThe body content must be:\n• Warm, expressive, gentle, and premium  \n• NOT short — must contain *at least 3 meaningful paragraphs*  \n• Should appreciate the customer and speak about:\n  - Organic lifestyle  \n  - Purity and gentle ingredients  \n  - Skin-friendly products  \n  - Natural wellness  \n  - Why their feedback matters  \n• Include human-sounding, friendly sentences  \n• Always generate a NEW, unique, poetic *wellness quote* (1–2 lines)\n\nExample themes for quotes:\n- nature’s calm\n- organic purity\n- inner glow\n- balance and wellness\n- mindful living\n\n────────────────────────────────────────\n  SIGNATURE FORMAT (STRICT)\n────────────────────────────────────────\nSignature MUST be left-aligned inside the card:\n\nWarm regards,<br>\n🌿<br>\n<strong style=\"letter-spacing:6px;\">B L O O M Y</strong><br>\n<span style=\"letter-spacing:6px;\">O R G A N I C S</span>\n\n────────────────────────────────────────\n  HTML OUTPUT RULES\n────────────────────────────────────────\nYour output MUST ALWAYS be:\n\n• Complete HTML email  \n• With <!doctype html>, <html>, <body>  \n• Styled WITH inline CSS  \n• NO markdown  \n• NO comments  \n• NO extra explanation  \n• Only the email body in HTML  \n\n────────────────────────────────────────\n  FINAL INSTRUCTION\n────────────────────────────────────────\nGenerate ONLY the final HTML email, nothing else.\n\n\n\nThe user details are in the google sheet, refer user prompt also\n\nafter generating the email, send using the gmail tool \n"
+            }
+          ]
+        },
+        "simplify": false,
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2,
+      "position": [
+        -224,
+        80
+      ],
+      "id": "3df11b25-e82f-4e25-bdca-a6ce9bda1397",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -144,
+        288
+      ],
+      "id": "c4b32495-b962-495f-9b34-a6aef19d95f4",
+      "name": "Send a message in Gmail",
+      "webhookId": "2b167551-8707-47c5-afda-a11cbac7e2ff",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "k7h4FtDjuWbT7P1m",
+          "name": "aaafocus"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        []
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Message a model",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "03d29d83-5bde-40b1-8ff6-056d3467bf63",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "ZsL7hx1yxJ12Afzz",
+  "tags": []
+}

@@ -1,0 +1,372 @@
+{
+  "name": "NewsletterProject",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=answer the user query:  {{ $json.message.text }}",
+        "options": {
+          "systemMessage": "CRITICAL INSTRUCTION: You MUST use search tools to find current information.\n\nSTEP 1 - DETERMINE CURRENT DATE:\n- Use SERP API to search: \"current date today\"\n- Extract and confirm today's date\n- Store as: detected_date\n\nSTEP 2 - SEARCH FOR RECENT NEWS (MANDATORY):\nYou MUST call these tools with date restrictions:\n\nA) SERP API Tool:\n   Query format: \"latest [topic] news December 2025\"\n   Add these parameters if available:\n   - tbs: \"qdr:m\" (last month)\n   - dateRestrict: \"m1\"\n   \nB) Perplexity Tool:\n   Query: \"What are the latest scientific breakthroughs in December 2025? Only show results from the past 30 days.\"\n\nC) If tools don't return December 2025 results:\n   - Try different search terms\n   - Add \"December 2025\" explicitly to queries\n   - Verify publication dates in results\n\nSTEP 3 - VALIDATE RESULTS:\nBefore outputting:\n- Check EVERY news item has a date from December 2025\n- If you see April 2024 or any old dates, those are from your training data\n- REJECT training data, ONLY use fresh search results\n- If no December 2025 results found, output: \"Unable to find recent news\"\n\nCRITICAL VALIDATION:\n- If your output contains \"April 2024\" = YOU FAILED\n- If your output contains any 2024 dates = YOU FAILED\n- ONLY dates from December 2025 are acceptable\n\nOUTPUT FORMAT:\n{\n  \"detected_date\": \"[Current date from search]\",\n  \"short_summary\": \"Latest news from December 2025: [summary]\",\n  \"full_newsletter\": \"<b>📰 Science News - December 26, 2025</b>\\n\\n[Only December 2025 content]\",\n  \"image_search\": \"science-news-december-2025\"\n}\n\nFINAL CHECK: Does your newsletter contain ONLY December 2025 dates? If NO, start over."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        -608,
+        -144
+      ],
+      "id": "6e815ec4-bc71-4183-a14a-9a26d4ce4d58",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "=telegram_ {{ $json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -576,
+        48
+      ],
+      "id": "23a823f1-9577-4470-ae65-db4963ebb4b1",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "messages": {
+          "message": [
+            {
+              "content": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('message0_Text', ``, 'string') }}"
+            }
+          ]
+        },
+        "simplify": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify_Output', ``, 'boolean') }}",
+        "options": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-base.perplexityTool",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        48
+      ],
+      "id": "45a6e1d5-b98d-4d04-846f-032380a4192f",
+      "name": "Perplexity",
+      "credentials": {
+        "perplexityApi": {
+          "id": "rkawrT9bf0Ozabr7",
+          "name": "selva-ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -704,
+        48
+      ],
+      "id": "b1737f1a-a5bf-4c72-a62a-28eed757a8ba",
+      "name": "OpenAICM",
+      "credentials": {
+        "openAiApi": {
+          "id": "FGswqUcWBUOGYMp1",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.twitterTool",
+      "typeVersion": 2,
+      "position": [
+        -320,
+        48
+      ],
+      "id": "a3f4738a-b6e2-479e-afe2-522ecd3467df",
+      "name": "Create Tweet in X",
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "bv87j4y6JVkuhy61",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -832,
+        -144
+      ],
+      "id": "dd4881c7-5981-4118-9107-c2822d79c6e2",
+      "name": "Telegram Trigger",
+      "webhookId": "a0359cdf-494b-4772-ae6c-c08f40567d78",
+      "credentials": {
+        "telegramApi": {
+          "id": "FFbLiFW9MVf8Cv73",
+          "name": "aaa_focus_ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "additionalFields": {},
+        "requestOptions": {}
+      },
+      "type": "n8n-nodes-serpapi.serpApiTool",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        48
+      ],
+      "id": "5a2fe32b-2182-4a5e-bf11-add21cc68001",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "ysCZ84IxIFjqaEKC",
+          "name": "aaafocus"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.all()[0].json;\nlet parsed;\n\ntry {\n  let content = input.output || input.text || JSON.stringify(input);\n  content = content.replace(/```json\\n?/g, '').replace(/```\\n?/g, '');\n  parsed = JSON.parse(content);\n} catch (e) {\n  parsed = {\n    short_summary: \"Latest updates\",\n    full_newsletter: \"<b>Content unavailable</b>\",\n    image_search: \"science-technology\"\n  };\n}\n\n// 🟩 Clean image search text\nconst cleanImageSearch = (parsed.image_search || \"science-technology\")\n  .toLowerCase()\n  .replace(/\\s+/g, '-')\n  .replace(/[^a-z0-9\\-]/g, '');\n\n// 🟩 Add chat_id here (pulled directly from Telegram Trigger node)\nconst chatId = $(\"Telegram Trigger\").first().json.message.chat.id;\n\nreturn [{\n  json: {\n    chat_id: chatId,  // ✅ now included in the JSON for later nodes\n    short_summary: parsed.short_summary || \"Latest updates\",\n    full_newsletter: parsed.full_newsletter || \"Content not available\",\n    image_search: cleanImageSearch\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        -144
+      ],
+      "id": "766c0636-c220-4f8b-85ae-5b01bb6c4a65",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "=https://serpapi.com/search.json?q={{$json[\"image_search\"]}}&tbm=isch&api_key=ae6877a3d0f2109116dbb2974dda5c85261fa457cc53d75d1d1ffb8debf71362\n",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -48,
+        -144
+      ],
+      "id": "56ddf43a-460a-4bad-801d-f1902b61b998",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $json;\nconst image = data.images_results?.[0]?.original || null;\nreturn [{ json: { image_url: image } }];\n\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        128,
+        -144
+      ],
+      "id": "e1d32173-1568-454c-a295-abb99e64afd4",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "file": "={{ $json.image_url }}",
+        "additionalFields": {
+          "caption": "={{ $json.caption_short }}",
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        496,
+        -144
+      ],
+      "id": "c8f88f39-4d27-4f48-9bb5-5959c0165851",
+      "name": "Send a photo message",
+      "webhookId": "bc96c9aa-d049-4f00-b1f6-f52385e47b82",
+      "credentials": {
+        "telegramApi": {
+          "id": "FFbLiFW9MVf8Cv73",
+          "name": "aaa_focus_ai"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const input = $input.all()[0].json;\n\n// Telegram caption limit = 1024 characters\nconst caption = input.full_newsletter || \"No content available\";\nconst maxCaption = caption.length > 1024 ? caption.slice(0, 1020) + \"...\" : caption;\n\nreturn [{\n  json: {\n    chat_id: input.chat_id, // ✅ safely available now\n    image_url: input.image_url,\n    full_newsletter: input.full_newsletter,\n    caption_short: maxCaption\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        320,
+        -144
+      ],
+      "id": "a4f22f5c-4b11-459a-8a3e-783d3ac9662a",
+      "name": "Code in JavaScript2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Perplexity": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAICM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Tweet in X": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Send a photo message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dee20ab8-84e3-47fd-89f8-c180ff86ea0e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "16ef25939cd41b06afcdea0486805413e42341ca59d846614bc9381c5540173b"
+  },
+  "id": "bZ4SDRfFzQC7BM9r",
+  "tags": []
+}
